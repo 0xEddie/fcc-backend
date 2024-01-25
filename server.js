@@ -43,6 +43,17 @@ app.get("/timestamp/api/:date_string?", (req, res) => {
   res.json({ ...msg });
 });
 
+app.get("/whoami/api/whoami", (req, res) => {
+  const resm = {
+    'ipaddress': req.ip,
+    'language': req.header('accept-language'),
+    'software': req.header('user-agent')
+  };
+  // console.log(resm)
+  res.json(resm);
+})
+
+
 // listen for requests :)
 const port = process.env.PORT || 3000;
 var listener = app.listen(port, function () {
