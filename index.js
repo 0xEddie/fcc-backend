@@ -1,10 +1,8 @@
 var express = require('express');
 var app = express();
 
-console.log('Environment PORT:', process.env.PORT);
-
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
+// so that API is remotely testable by FCC 
 var cors = require('cors');
 app.use(cors({ optionsSuccessStatus: 200 }));  // some legacy browsers choke on 204
 
@@ -12,14 +10,17 @@ app.use(cors({ optionsSuccessStatus: 200 }));  // some legacy browsers choke on 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-// app level router for root route (loads ./views/index.html)
+// Page routes
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
+app.get("/timestamp", (req, res) => {
+  res.sendFile(__dirname + "/views/timestamp.html")
+})
 
-
-app.get("/api/:date", (req, res) => {
+// API endpoints
+app.get("/api/timestamp/:date", (req, res) => {
   const date = new Date(req.params.date);
   if (!isNaN(date)) {
     const msg = {
