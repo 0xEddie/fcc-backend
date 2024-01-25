@@ -12,12 +12,12 @@ app.use(express.static('public'));
 
 // Page routes
 // http://expressjs.com/en/starter/basic-routing.html
-// app.get("/", function (req, res) {
-//   res.sendFile(__dirname + '/views/index.html');
-// });
-// app.get("/timestamp", (req, res) => {
-//   res.sendFile(__dirname + "/views/timestamp.html")
-// })
+app.get("/", function (req, res) {
+  res.sendFile(__dirname + '/views/index.html');
+});
+app.get("/timestamp", (req, res) => {
+  res.sendFile(__dirname + "/views/timestamp.html")
+})
 
 // API endpoints
 app.get("/timestamp/api/:date?", (req, res) => {
