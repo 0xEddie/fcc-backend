@@ -15,6 +15,9 @@ app.get("/", function (req, res) {
 app.get("/timestamp", (req, res) => {
   res.sendFile(__dirname + "/views/timestamp.html");
 });
+app.get("/parser", (req, res) => {
+  res.sendFile(__dirname + "/views/parser.html");
+});
 
 // API endpoints
 app.get("/timestamp/api/:date_string?", (req, res) => {
@@ -43,7 +46,7 @@ app.get("/timestamp/api/:date_string?", (req, res) => {
   res.json({ ...msg });
 });
 
-app.get("/whoami/api/whoami", (req, res) => {
+app.get("/parser/api/whoami", (req, res) => {
   const resm = {
     'ipaddress': req.ip,
     'language': req.header('accept-language'),
