@@ -20,11 +20,15 @@ app.use(express.static('public'));
 // })
 
 // API endpoints
-app.get("/api/timestamp/:date?", (req, res) => {
+app.get("/timestamp/api/:date?", (req, res) => {
   let reqDate;
   // if date parameter is empty, return current datetime
   if (typeof req.params.date === 'undefined') {
     reqDate = new Date();
+  } else if (typeof (+req.params.date) === 'number') {
+    // if date_string can be parsed as a number, then assume its a unix timestamp
+    // new Date() needs an integer, not a string
+    reqDate = new Date(parseInt(req.params.date))
   } else {
     reqDate = new Date(req.params.date);
   }
