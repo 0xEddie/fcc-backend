@@ -20,12 +20,19 @@ app.get("/timestamp", (req, res) => {
 })
 
 // API endpoints
-app.get("/api/timestamp/:date", (req, res) => {
-  const date = new Date(req.params.date);
-  if (!isNaN(date)) {
+app.get("/api/timestamp/:date?", (req, res) => {
+  let reqDate;
+  // if date parameter is empty, return current datetime
+  if (typeof req.params.date === 'undefined') {
+    reqDate = new Date();
+  } else {
+    reqDate = new Date(req.params.date);
+  }
+
+  if (!isNaN(reqDate)) {
     const msg = {
-      "unix": date.valueOf(),
-      "utc": date.toUTCString()
+      "unix": reqDate.valueOf(),
+      "utc": reqDate.toUTCString()
     }
     res.json({ ...msg });
   } else {
