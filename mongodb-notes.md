@@ -54,6 +54,31 @@ const puppySchema = new mongoose.Schema({
 const Puppy = mongoose.model('Puppy', puppySchema);
 ```
 
+### Create a person schema called `personSchema`
+
+with these properties:
+
+- A required name field of type String
+- An age field of type Number
+- A favoriteFoods field of type [String]
+
+Then create a model from the `personSchema` and assign it to the existing variable `Person`
+
+```js
+const personSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  age: Number,
+  favoriteFoods: [String]
+})
+
+const Person = mongoose.model('Person', personSchema);
+```
+
+## 3 - Create and Save a Record of a Model
+
 Interactions with a database typically happne in handler functions
 - Handler functions are executed when some event happens (eg someone hits an endpoint on your API)
 - The `done()` function is a callback that tells us we can procedd afte completing an asynchronous operation
@@ -74,12 +99,83 @@ const exampleFunc = function(done) {
 };
 ```
 
-### Create a person schema called `personSchema`
+### Within the `createAndSavePerson` function, create a document instance using the `Person` model constructor
 
-with these properties:
+To the constructutor, pass an object with properties
+- `name`
+- `age`
+- `favoriteFoods`
+with their types conforming to the one in the `personSchema`
 
-- A required name field of type String
-- An age field of type Number
-- A favoriteFoods field of type [String]
+Then call `<document>.save()` on the returned document instance, passing in the callback using the Node convention
 
-Then create a model from the `personSchema` and assign it to the existing variable `Person`
+```js
+const createAndSavePerson = (done) => {
+  const jimbo = new Person({
+    name: "Jim Bo",
+    age: 29,
+    favoriteFoods: ["burger", "fry"],
+  });
+
+  jimbo.save((err, data) => {
+    if (err) return console.error(err);
+    done(null, data);
+  });
+};
+```
+
+**QUERY** I don't really understand what `done` or `data` are
+- apparently `done(null, data)` like the return message of saving something to the database
+    - `null` just means no errors occured
+    - `data` contains the new database entry, ie `jimbo` plus any transformations by MongoDB (like adding an `_id` field)
+
+## 4 - Create Many Records with model.create()
+
+### Modify the `createManyPeople` function to create many people using `Model.create()` with the argument `arrayOfPeople`
+
+`<Model>.create` requires a callback, similar to the `person.save` function used in the previous section
+
+```js
+const createManyPeople = (arrayOfPeople, done) => {
+  Person.create(arrayOfPeople, (err, data) => {
+    if (err) return console.error(err);
+    done(null, data);
+  })
+};
+```
+
+`arrayOfPeople` is an array of objects that match the schema
+```js
+const arrayOfPeople = [
+  {
+    name: "Alice Johnson",
+    age: 35,
+    favoriteFoods: ["pizza", "pasta"],
+  },
+  {
+    name: "Bob Smith",
+    age: 28,
+    favoriteFoods: ["sushi", "steak"],
+  }
+];
+```
+
+## 5 - Use model.find() to Search Your Database
+
+- `Model.find()` accepts a query document (a JSON object) as the first argument, then a callback
+    - It returns an array of matches
+
+### Modify the `findPeopleByName` function to find all the people having a given name, using `<Model>.find() -> [Person]`
+
+Use the function argument `personName` as the search key
+
+```js
+const findPeopleByName = (personName, done) => {
+  Person.find({name: personName}, (err, data) => {
+    if (err) return console.error(err);
+    done(null, data);
+  })
+};
+```
+
+
