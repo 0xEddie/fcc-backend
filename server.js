@@ -25,8 +25,8 @@ app.get("/timestamp/api/:date_string?", (req, res) => {
   if (typeof req.params.date_string == "undefined") {
     // if date_string is empty, return current datetime
     reqDate = new Date();
-  } else if (/^\d{5}/.test(req.params.date_string)) {
-    // if date_string starts with 5 numbers, then assume its a unix timestamp
+  } else if (/^\d+$/.test(req.params.date_string)) {
+    // if date_string contains only numbers, then assume its a unix timestamp
     // new Date() needs an parsed integer, not a string number
     reqDate = new Date(parseInt(req.params.date_string));
   } else {
@@ -34,26 +34,25 @@ app.get("/timestamp/api/:date_string?", (req, res) => {
     reqDate = new Date(req.params.date_string);
   }
 
-  let msg;
+  let resMsg;
   if (reqDate.toString() !== "Invalid Date") {
-    msg = {
+    resMsg = {
       unix: reqDate.getTime(),
       utc: reqDate.toUTCString(),
     };
-  } else {
-    msg = { error: "Invalid Date" };
-  }
-  res.json({ ...msg });
+  } else { resMsg = { error: "Invalid Date" }; }
+
+  res.json({ ...resMsg });
 });
 
-app.get("/parser/api/whoami", (req, res) => {
-  const resm = {
+app.get("/header/api/whoami", (req, res) => {
+  const resMsg = {
     'ipaddress': req.ip,
     'language': req.header('accept-language'),
     'software': req.header('user-agent')
   };
   // console.log(resm)
-  res.json(resm);
+  res.json(resMsg);
 })
 
 
